@@ -9,7 +9,7 @@ dotenv.config();
 
 describe("concat service", () => {
   let concatService: ConcatService;
-  const concatDto: ConcatVideosDto = {
+  const concatVideosDto: ConcatVideosDto = {
     inputVideoPaths: [process.env.INPUT_VIDEO_1!, process.env.INPUT_VIDEO_2!],
     outputVideoPath: process.env.OUTPUT_VIDEO!,
     transition: {
@@ -35,7 +35,7 @@ describe("concat service", () => {
     }
 
     cutVideoInputs = (await concatService["getCutVideoInputs"]({
-      dto: concatDto,
+      dto: concatVideosDto,
       tempDir: tempDir,
     })) as CutVideoInput[];
   });
@@ -44,7 +44,7 @@ describe("concat service", () => {
     if (fs.existsSync(tempDir)) {
       await fs.promises.rm(tempDir, { recursive: true });
     }
-    if (fs.existsSync(process.env.OUTPUT_VIDEO!)) {
+    if (fs.existsSync(outputFile)) {
       await fs.promises.rm(outputFile);
     }
     if (fs.existsSync(cutVideoFile)) {
@@ -97,7 +97,7 @@ describe("concat service", () => {
 
   test("createTransition", async () => {
     const transitionOutputs = await concatService["createTransition"]({
-      dto: concatDto,
+      dto: concatVideosDto,
       cutVideoInputs,
       tempDir,
     });
@@ -109,7 +109,7 @@ describe("concat service", () => {
 
   test("mergeVideos", async () => {
     await concatService["mergeVideos"]({
-      dto: concatDto,
+      dto: concatVideosDto,
       tempDir,
     });
 

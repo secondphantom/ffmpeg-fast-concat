@@ -3,7 +3,7 @@ import { ConcatService, ConcatVideosDto } from "./concat.service";
 export class ConcatController {
   constructor(private concatService: ConcatService) {}
 
-  concatVideos = async (dto: ConcatVideosDto) => {
+  videos = async (dto: ConcatVideosDto) => {
     const validatedDto = this.validateConcatVideosDto(dto);
     await this.concatService.concatVideos(validatedDto);
   };
