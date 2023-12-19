@@ -1,5 +1,5 @@
 import {
-  ConcatDto,
+  ConcatVideosDto,
   ConcatService,
   CutVideoInput,
 } from "../../core/concat.service";
@@ -7,9 +7,9 @@ import fs from "fs";
 import dotenv from "dotenv";
 dotenv.config();
 
-describe("service", () => {
+describe("concat service", () => {
   let concatService: ConcatService;
-  const concatDto: ConcatDto = {
+  const concatDto: ConcatVideosDto = {
     inputVideoPaths: [process.env.INPUT_VIDEO_1!, process.env.INPUT_VIDEO_2!],
     outputVideoPath: process.env.OUTPUT_VIDEO!,
     transition: {
@@ -53,7 +53,7 @@ describe("service", () => {
   });
 
   test("getCutVideoInputs", async () => {
-    const concatDto: ConcatDto = {
+    const concatDto: ConcatVideosDto = {
       inputVideoPaths: [process.env.INPUT_VIDEO_1!, process.env.INPUT_VIDEO_2!],
       outputVideoPath: process.env.OUTPUT_VIDEO!,
       transition: {

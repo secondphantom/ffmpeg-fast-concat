@@ -9,7 +9,7 @@ interface Transition {
   duration: number;
 }
 
-export type ConcatDto = {
+export type ConcatVideosDto = {
   inputVideoPaths: string[];
   outputVideoPath: string;
   transition: Transition;
@@ -25,7 +25,7 @@ export type CutVideoInput = {
 export class ConcatService {
   constructor(private tempDir: string, private concurrency: number = 4) {}
 
-  concatVideos = async (dto: ConcatDto) => {
+  concatVideos = async (dto: ConcatVideosDto) => {
     const tempDir = `${this.tempDir}/${shortUUID().generate()}`;
     if (!fs.existsSync(tempDir)) {
       fs.mkdirSync(tempDir, { recursive: true });
@@ -58,7 +58,7 @@ export class ConcatService {
     dto,
     tempDir,
   }: {
-    dto: ConcatDto;
+    dto: ConcatVideosDto;
     tempDir: string;
   }) => {
     const { transition, inputVideoPaths: videos } = dto;
@@ -155,7 +155,7 @@ export class ConcatService {
     cutVideoInputs,
     tempDir,
   }: {
-    dto: ConcatDto;
+    dto: ConcatVideosDto;
     cutVideoInputs: CutVideoInput[];
     tempDir: string;
   }) => {
@@ -194,7 +194,7 @@ export class ConcatService {
   };
 
   private xFadeTransition = async (
-    dto: ConcatDto,
+    dto: ConcatVideosDto,
     cutVideoInputs: CutVideoInput[],
     tempDir: string
   ) => {
@@ -220,12 +220,11 @@ export class ConcatService {
     return outputPath;
   };
 
-  // mergeVideos
   private mergeVideos = async ({
     dto,
     tempDir,
   }: {
-    dto: ConcatDto;
+    dto: ConcatVideosDto;
     tempDir: string;
   }) => {
     const concatListFilePath = await this.createConcatText(dto, tempDir);
@@ -247,7 +246,7 @@ export class ConcatService {
     await this.spawnFfmpeg(commands);
   };
 
-  private createConcatText = async (dto: ConcatDto, tempDir: string) => {
+  private createConcatText = async (dto: ConcatVideosDto, tempDir: string) => {
     const extension = path.extname(dto.inputVideoPaths[0]);
     const length = dto.inputVideoPaths.length;
 
@@ -298,7 +297,9 @@ export class ConcatService {
           console.log("Error");
         } else {
           resolve(null);
-          console.log("Finish Processing");
+          if (process.env.NODE_ENV === "verbose") {
+            console.log("Finish Processing");
+          }
         }
       });
     });
