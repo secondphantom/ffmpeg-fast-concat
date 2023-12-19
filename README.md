@@ -2,7 +2,7 @@
 You can concat videos by ffmpeg 
 ## Install
 ```
-npm i ffmpeg-fast-concat
+npm i @secondphantom/ffmpeg-fast-concat
 ```
 ## Usage
 ```ts
