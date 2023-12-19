@@ -7,16 +7,24 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "watch": "tsc -w",
-    "test": "jest --runInBand --silent=false"
+    "test": "cross-env NODE_ENV=test DOTENV_CONFIG_PATH=./.env jest --runInBand --silent=false",
+    "temp": "cross-env NODE_ENV=test DOTENV_CONFIG_PATH=./.env node dist/core/concat.service.js"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@types/fluent-ffmpeg": "^2.1.24",
     "@types/jest": "^29.5.11",
     "@types/node": "^20.10.5",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.3.1",
     "ts-jest": "^29.1.1",
     "tsup": "^8.0.1",
     "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "fluent-ffmpeg": "^2.1.2",
+    "short-uuid": "^4.2.2"
   }
 }
