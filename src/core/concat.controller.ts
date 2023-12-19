@@ -5,7 +5,8 @@ export class ConcatController {
 
   videos = async (dto: ConcatVideosDto) => {
     const validatedDto = this.validateConcatVideosDto(dto);
-    await this.concatService.concatVideos(validatedDto);
+    const videoOutputPath = await this.concatService.concatVideos(validatedDto);
+    return videoOutputPath;
   };
 
   private validateConcatVideosDto = (dto: ConcatVideosDto) => {

@@ -40,6 +40,8 @@ export class ConcatService {
     await this.mergeVideos({ dto, tempDir });
 
     await fs.promises.rm(tempDir, { recursive: true });
+
+    return dto.outputVideoPath;
   };
 
   private splitVideos = async (cutVideoInputs: CutVideoInput[]) => {

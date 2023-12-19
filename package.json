@@ -8,10 +8,11 @@
   "scripts": {
     "watch": "tsc -w",
     "test": "cross-env NODE_ENV=test DOTENV_CONFIG_PATH=./.env jest --runInBand --silent=false",
-    "temp": "cross-env NODE_ENV=test DOTENV_CONFIG_PATH=./.env node dist/core/concat.service.js"
+    "temp": "cross-env NODE_ENV=test DOTENV_CONFIG_PATH=./.env node dist/core/concat.service.js",
+    "build": "tsup src/index.ts --format cjs,esm --dts"
   },
   "keywords": [],
-  "author": "",
+  "author": "Second Phantom <second2phantom@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "@types/fluent-ffmpeg": "^2.1.24",
