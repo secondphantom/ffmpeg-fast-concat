@@ -4,3 +4,4 @@ exclude
 scripts
 .env
 .vscode
+.npmtoken

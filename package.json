@@ -1,10 +1,14 @@
 {
-  "name": "ffmpeg-fast-concat",
+  "name": "@secondphantom/ffmpeg-fast-concat",
   "version": "0.1.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/secondphantom/ffmpeg-fast-concat"
+  },
   "scripts": {
     "watch": "tsc -w",
     "test": "cross-env NODE_ENV=test DOTENV_CONFIG_PATH=./.env jest --runInBand --silent=false",
