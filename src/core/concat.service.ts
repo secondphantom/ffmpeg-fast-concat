@@ -20,6 +20,7 @@ export type CutVideoInput = {
   outputVideoPath: string;
   duration: number;
   startSec: number;
+  videoBitRate: number;
 };
 
 export class ConcatService {
@@ -66,9 +67,11 @@ export class ConcatService {
     const { transition, inputVideoPaths: videos } = dto;
 
     let index = 0;
-    let totalInputs = [];
+    let totalInputs: CutVideoInput[] = [];
     for (const inputVideoPath of videos) {
-      const videoDuration = await this.getVideoDuration(inputVideoPath);
+      const { videoDuration, videoBitRate } = await this.getVideoMeta(
+        inputVideoPath
+      );
       const extension = path.extname(inputVideoPath);
 
       const inputs = [
@@ -82,6 +85,7 @@ export class ConcatService {
             outputVideoPath,
             duration: videoDuration - (2 * transition.duration) / 1000,
             startSec: transition.duration / 1000,
+            videoBitRate,
           };
         } else if (index === 2) {
           return {
@@ -89,6 +93,7 @@ export class ConcatService {
             outputVideoPath,
             duration: transition.duration / 1000,
             startSec: videoDuration - transition.duration / 1000,
+            videoBitRate,
           };
         }
         return {
@@ -96,6 +101,7 @@ export class ConcatService {
           outputVideoPath,
           duration: transition.duration / 1000,
           startSec: 0,
+          videoBitRate,
         };
       });
       index++;
@@ -127,10 +133,9 @@ export class ConcatService {
     outputVideoPath,
     duration,
     startSec,
+    videoBitRate,
   }: CutVideoInput) => {
     const commands = [
-      "-hwaccel_output_format",
-      "cuda",
       "-i",
       inputVideoPath,
       "-y",
@@ -138,14 +143,12 @@ export class ConcatService {
       startSec,
       "-t",
       duration,
+      "-c",
+      "copy",
       "-c:v",
       "h264_nvenc",
       "-b:V",
-      "20M",
-      "-b:a",
-      "128k",
-      "-vcodec",
-      "h264_nvenc",
+      `${videoBitRate}`,
       outputVideoPath,
     ].map((v) => String(v));
 
@@ -307,14 +310,24 @@ export class ConcatService {
     });
   };
 
-  private getVideoDuration = (filePath: string): Promise<number> => {
+  private getVideoMeta = (
+    filePath: string
+  ): Promise<{
+    videoDuration: number;
+    videoBitRate: number;
+  }> => {
     return new Promise((resolve, reject) => {
       ffmpeg.ffprobe(filePath, (err, metadata) => {
         if (err) {
           reject(err);
         } else {
           const duration = metadata.format.duration as number;
-          resolve(duration);
+          const videoBitRate = metadata.format.bit_rate as number;
+
+          resolve({
+            videoDuration: duration,
+            videoBitRate,
+          });
         }
       });
     });

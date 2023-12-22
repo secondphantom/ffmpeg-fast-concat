@@ -5,6 +5,7 @@ import {
 } from "../../core/concat.service";
 import fs from "fs";
 import dotenv from "dotenv";
+import { promisify } from "util";
 dotenv.config();
 
 describe("concat service", () => {
@@ -77,23 +78,39 @@ describe("concat service", () => {
     );
   });
 
+  test("get video meta", async () => {
+    const res = await concatService["getVideoMeta"](
+      process.env.INPUT_LONG_VIDEO_1!
+    );
+
+    expect(res).toMatchObject({
+      videoDuration: expect.any(Number),
+      videoBitRate: expect.any(Number),
+    });
+  });
+
   test("cutVideo", async () => {
+    console.time("cutVideo");
     await concatService["cutVideo"]({
-      inputVideoPath: process.env.INPUT_VIDEO_1!,
+      inputVideoPath: process.env.INPUT_LONG_VIDEO_1!,
       outputVideoPath: cutVideoFile,
-      duration: 10,
-      startSec: 3,
+      duration: 100,
+      startSec: 0,
+      videoBitRate: 20000,
     });
     expect(fs.existsSync(cutVideoFile)).toEqual(true);
-  }, 30000);
+    console.timeEnd("cutVideo");
+  }, 60000);
 
   test("splitVideos", async () => {
+    console.time("splitVideos");
     await concatService["splitVideos"](cutVideoInputs);
 
     cutVideoInputs
       .map((v) => fs.existsSync(v.outputVideoPath))
       .forEach((v) => expect(v).toEqual(true));
-  }, 30000);
+    console.timeEnd("splitVideos");
+  }, 60000);
 
   test("createTransition", async () => {
     const transitionOutputs = await concatService["createTransition"]({
@@ -105,7 +122,7 @@ describe("concat service", () => {
     transitionOutputs
       .map((v) => fs.existsSync(v))
       .forEach((v) => expect(v).toEqual(true));
-  });
+  }, 30000);
 
   test("mergeVideos", async () => {
     await concatService["mergeVideos"]({
