@@ -143,8 +143,8 @@ export class ConcatService {
       startSec,
       "-t",
       duration,
-      "-c",
-      "copy",
+      "-ac",
+      "2",
       "-c:v",
       "h264_nvenc",
       "-b:V",
@@ -234,7 +234,6 @@ export class ConcatService {
   }) => {
     const concatListFilePath = await this.createConcatText(dto, tempDir);
 
-    console.log(dto.outputVideoPath);
     const commands = [
       "-f",
       "concat",
@@ -243,7 +242,9 @@ export class ConcatService {
       "-i",
       concatListFilePath,
       "-y",
-      "-c",
+      "-c:a",
+      "copy",
+      "-c:v",
       "copy",
       dto.outputVideoPath,
     ];
